@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Naomi! ✨</title>
+    <!-- Google Fonts for premium, clean typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti Library correctly mapped for the interactive explosion -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #ff758c;
+            --secondary: #ff7eb3;
+            --accent: #8600c8;
+            --bg-gradient: linear-gradient(135deg, #ff758c 0%, #ff7eb3 50%, #7028e4 100%);
+            --text-color: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            color: var(--text-color);
+        }
+
+        /* Ambient Floating Background Elements */
+        .bg-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .heart-particle {
+            position: absolute;
+            bottom: -10%;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.4);
+            animation: floatUp 8s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Elegant Floating Music Controller */
+        .music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
+            padding: 10px;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            border: 2px solid white;
+            transition: all 0.3s ease;
+        }
+
+        .music-control.playing {
+            animation: spinDisk 4s linear infinite;
+        }
+
+        @keyframes spinDisk {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Main Web Layout Container */
+        .container {
+            width: 90%;
+            max-width: 500px;
+            z-index: 10;
+            perspective: 1000px;
+            padding: 20px 0;
+        }
+
+        /* Card Smooth Entrance on Load */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateY(30px);
+            opacity: 0;
+            animation: fadeInUp 1s forwards 0.5s;
+        }
+
+        @keyframes fadeInUp {
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Soft Scaling Glow on Naomi's Name Badge */
+        .name-banner {
+            background: linear-gradient(45deg, rgba(255, 117, 140, 0.15), rgba(112, 40, 228, 0.1));
+            padding: 8px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 117, 140, 0.3);
+            animation: shine 2.5s infinite alternate ease-in-out;
+        }
+
+        @keyframes shine {
+            0% { transform: scale(1); box-shadow: 0 0 0px rgba(255,117,140,0); }
+            100% { transform: scale(1.04); box-shadow: 0 0 15px rgba(255,117,140,0.25); }
+        }
+
+        .name-banner span {
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            color: var(--accent);
+        }
+
+        /* Interactive Profile Photo Area */
+        .profile-area {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 25px;
+            cursor: pointer;
+        }
+
+        .profile-container-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid #fff;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            animation: pulse 3s infinite ease-in-out;
+            transition: transform 0.4s ease;
+        }
+
+        .profile-area:hover .profile-container-inner {
+            transform: scale(1.03);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0px 0px rgba(255, 117, 140, 0.5); }
+            70% { box-shadow: 0 0px 0px 18px rgba(255, 117, 140, 0); }
+            100% { box-shadow: 0 0px 0px 0px rgba(255, 117, 140, 0); }
+        }
+
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(12px) brightness(0.9);
+            transform: scale(1.1);
+            transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        /* Premium blur reveal overlay text */
+        .blur-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 117, 140, 0.15);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            text-align: center;
+            padding: 10px;
+            transition: all 0.5s ease;
+        }
+
+        /* Revealed State Styles */
+        .profile-area.revealed .profile-pic {
+            filter: blur(0px) brightness(1);
+            transform: scale(1);
+        }
+
+        .profile-area.revealed .blur-overlay {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .badge {
+            position: absolute;
+            bottom: -5px;
+            right: 5px;
+            background: var(--accent);
+            color: #fff;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            z-index: 5;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.2rem;
+            color: #7028e4;
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #666;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        /* Smooth Height Expansion Reveal for your Wishes */
+        .message-box {
+            background: rgba(255, 117, 140, 0.06);
+            border-left: 4px solid var(--primary);
+            padding: 0 20px;
+            border-radius: 0 16px 16px 0;
+            text-align: left;
+            margin-bottom: 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #4a5568;
+            height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .message-box.reveal {
+            height: auto;
+            opacity: 1;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+
+        /* Interactive Action Button */
+        .cta-btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 15px 38px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(255, 117, 140, 0.3);
+            transition: all 0.3s ease;
+            outline: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(255, 117, 140, 0.4);
+        }
+
+        /* Bottom Inside Jokes Area */
+        .jokes-section {
+            margin-top: 25px;
+            border-top: 1px dashed #e2e8f0;
+            padding-top: 20px;
+            display: none;
+            animation: fadeIn 0.8s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .joke-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .joke-text {
+            font-style: italic;
+            font-size: 0.95rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🎵 BACKGROUND MUSIC ENGINE (Successfully linked to her track!) -->
+    <audio id="bgSong" src="https://files.catbox.moe/3fu5qx.mp3" loop></audio>
+    
+    <div class="music-control" id="musicBtn" onclick="toggleMusic()">🎵</div>
+
+    <div class="bg-hearts" id="heartsContainer"></div>
+
+    <div class="container">
+        <div class="card" id="birthdayCard">
+            
+            <div class="name-banner">
+                <span>✨ NAOMI ✨</span>
+            </div>
+            
+            <!-- Picture Area with built-in interactive blur reveal effect -->
+            <div class="profile-area" id="profileArea" onclick="revealPhoto()">
+                <div class="profile-container-inner">
+                    <img src="https://i.imgur.com/M5u1XBz.jpeg" alt="Naomi" class="profile-pic" id="naomiPic">
+                    <div class="blur-overlay" id="blurOverlay">Tap to Reveal Pookie 💖</div>
+                </div>
+                <span class="badge">MY POOKIE 👑</span>
+            </div>
+
+            <h1 id="greetingHeading">Hey Bestie! 💖</h1>
+            <p class="subtitle" id="dateSubtitle">Celebrating my number one person today</p>
+
+            <div class="message-box" id="secretLetter">
+                <strong>To my favorite human,</strong><br><br>
+                Happy Birthday to my absolute pookie and irreplaceable bestie, Naomi! 🥳✨ Thank you for always being the one who gets my broken humor, the person I can always run to, and the best part of my days. You bring so much energy and joy into everything you do. <br><br>
+                I hope this new age brings you countless blessings, laughter, and endless wins. You deserve the absolute world, Naomi! I love you endlessly. Here's to making more iconic memories together! 🥂💖
+            </div>
+
+            <button class="cta-btn" id="actionBtn" onclick="celebrateClick()">
+                <span>Tap for a Surprise! 🎁</span>
+            </button>
+
+            <div class="jokes-section" id="jokesSection">
+                <p class="joke-title">🔒 Bestie Status: Locked Forever</p>
+                <p class="joke-text" id="jokeText">"No one else is allowed to be this awesome, Naomi. It's literally a rule."</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const song = document.getElementById('bgSong');
+        const musicBtn = document.getElementById('musicBtn');
+        let audioUnlocked = false;
+
+        // Initialize song config (Soft background layout volume)
+        song.volume = 0.15; 
+
+        // Function to safely trigger the 3-5 second music delay upon initial user touch
+        function unlockAudioEngine() {
+            if (!audioUnlocked) {
+                audioUnlocked = true;
+                setTimeout(() => {
+                    song.play().then(() => {
+                        musicBtn.classList.add('playing');
+                        musicBtn.innerText = "⏸️";
+                    }).catch(err => console.log("Audio play blocked: ", err));
+                }, 3000); // 3 Seconds delay after interaction
+            }
+        }
+
+        function toggleMusic() {
+            if (song.paused) {
+                song.play();
+                musicBtn.classList.add('playing');
+                musicBtn.innerText = "⏸️";
+            } else {
+                song.pause();
+                musicBtn.classList.remove('playing');
+                musicBtn.innerText = "🎵";
+            }
+        }
+
+        // Generate floating background particles
+        const heartsContainer = document.getElementById('heartsContainer');
+        const symbols = ['🌸', '✨', '💖', '🎈', '🎵', '👑'];
+        
+        for (let i = 0; i < 20; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-particle');
+            heart.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDelay = Math.random() * 8 + 's';
+            heart.style.fontSize = (Math.random() * 1.3 + 1) + 'rem';
+            heart.style.animationDuration = (Math.random() * 4 + 6) + 's';
+            heartsContainer.appendChild(heart);
+        }
+
+        // Photo Reveal Trigger Function
+        function revealPhoto() {
+            unlockAudioEngine(); // Unlocks music safely on first interaction
+            const area = document.getElementById('profileArea');
+            if(!area.classList.contains('revealed')) {
+                area.classList.add('revealed');
+                confetti({
+                    particleCount: 40,
+                    spread: 40,
+                    origin: { y: 0.4 }
+                });
+            }
+        }
+
+        // Main Gift Box Confetti Action Engine
+        let clickCount = 0;
+        function celebrateClick() {
+            unlockAudioEngine(); // Unlocks music safely on button tap
+            clickCount++;
+            revealPhoto();
+            
+            confetti({
+                particleCount: 160,
+                spread: 85,
+                origin: { y: 0.6 },
+                colors: ['#ff758c', '#ff7eb3', '#7028e4', '#fff', '#ffd700']
+            });
+
+            if (clickCount === 1) {
+                document.getElementById('greetingHeading').innerText = "Happy Birthday, Naomi! 🎉";
+                document.getElementById('dateSubtitle').innerText = "You deserve the absolute world today";
+                
+                const letter = document.getElementById('secretLetter');
+                letter.classList.add('reveal');
+                
+                document.getElementById('jokesSection').style.display = 'block';
+                
+                const btn = document.getElementById('actionBtn');
+                btn.innerHTML = "<span>Pookie press this button! 🥳</span>";
+                btn.style.background = "linear-gradient(45deg, #7028e4, #ff7eb3)";
+            } else {
+                const rotatingMessages = [
+                    "\"Honestly Pookie, nobody else would ever understand how important you are to me.\"",
+                    "\"A massive shoutout to my ultimate pookie! 🥂\"",
+                    "\"If anyone ever saw our chat logs, we'd both be under fire lol.\"",
+                    "\"Cheers to the best friend who knows literally everything about me and still stays! ✨\"",
+                    "\"My cute Pookie, even though she dey look for my trouble sometimes.\"",
+                    "\"See as you just dey shine teeth 😂\"",
+                    "\"I know you'll be craving for caprisun and Fab biscuits again but don't worry it's your day enjoy\""
+                ];
+                const randomMsg = rotatingMessages[Math.floor(Math.random() * rotatingMessages.length)];
+                document.getElementById('jokeText').innerText = randomMsg;
+            }
+        }
+    </script>
+</body>
+</html>
